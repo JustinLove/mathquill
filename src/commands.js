@@ -153,6 +153,8 @@ _.redraw = function() {
   });
 };
 
+_.optional_arg_cmd = SquareRoot.optional_arg_cmd = NthRoot;
+
 LatexCmds.sqrt = LatexCmds['√'] = SquareRoot;
 
 function NthRoot(replacedFragment) {
