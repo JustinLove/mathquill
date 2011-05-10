@@ -26,6 +26,7 @@ _.text = function() {
     text += '*';
   return text;
 };
+_.javascript = _.text;
 
 function VanillaSymbol(ch, html) {
   Symbol.call(this, ch, '<span>'+(html || ch)+'</span>');

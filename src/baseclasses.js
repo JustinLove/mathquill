@@ -45,6 +45,10 @@ function MathCommand(cmd, html_template, text_template, replacedFragment) {
   if (html_template) self.html_template = html_template;
   if (text_template) self.text_template = text_template;
 
+  if (self.text_template && !self.js_template) {
+    self.js_template = self.text_template;
+  }
+
   self.jQ = $(self.html_template[0]).data(jQueryDataKey, {cmd: self});
   self.initBlocks(replacedFragment);
 }
@@ -108,6 +112,17 @@ _.text = function() {
     return text + child.text() + (this.text_template[i] || '');
   });
 };
+_.javascript = function() {
+  var i = 0;
+  return this.foldChildren(this.js_template[i], function(js, child) {
+    i += 1;
+    var child_js = child.javascript();
+    if (js && this.js_template[i] === '('
+        && child_js[0] === '(' && child_js.slice(-1) === ')')
+      return js + child_js.slice(1, -1) + this.js_template[i];
+    return js + child.javascript() + (this.js_template[i] || '');
+  });
+};
 _.remove = function() {
   var self = this,
       prev = self.prev,
@@ -152,6 +167,7 @@ _ = Symbol.prototype = new MathCommand;
 _.initBlocks = $.noop;
 _.latex = function(){ return this.cmd; };
 _.text = function(){ return this.text_template; };
+_.javascript = _.text;
 _.placeCursor = $.noop;
 _.isEmpty = function(){ return true; };
 
@@ -172,6 +188,13 @@ _.text = function() {
     this.firstChild.text() :
     this.foldChildren('(', function(text, child) {
       return text + child.text();
+    }) + ')';
+};
+_.javascript = function() {
+  return this.firstChild === this.lastChild ?
+    this.firstChild.javascript() :
+    this.foldChildren('(', function(js, child) {
+      return js + child.javascript();
     }) + ')';
 };
 _.isEmpty = function() {

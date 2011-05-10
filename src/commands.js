@@ -512,7 +512,13 @@ _.text = function() {
     text.push(child.text());
     return text;
   }).join() + ']';
-}
+};
+_.javascript = function() {
+  return '[' + this.foldChildren([], function(js, child) {
+    js.push(child.javascript());
+    return js;
+  }).join() + ']';
+};
 _.placeCursor = function(cursor) {
   this.cursor = cursor.appendTo(this.firstChild);
 };
@@ -605,5 +611,6 @@ LatexCmds.editable = proto(RootMathCommand, function() {
     MathBlock.prototype.blur.call(this);
   };
   this.text = function(){ return this.firstChild.text(); };
+  this.javascript = function(){ return this.firstChild.javascript(); };
 });
 

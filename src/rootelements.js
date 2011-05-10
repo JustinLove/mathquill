@@ -153,6 +153,11 @@ _.text = function() {
     return text + child.text();
   });
 };
+_.javascript = function() {
+  return this.foldChildren('', function(js, child) {
+    return js + child.javascript();
+  });
+};
 _.renderLatex = function(latex) {
   this.jQ.children().slice(1).remove();
   this.firstChild = this.lastChild = 0;
