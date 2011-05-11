@@ -85,6 +85,12 @@ LatexCmds.supscript =
 LatexCmds['^'] = proto(SupSub, function(replacedFragment) {
   SupSub.call(this, '^', '<sup></sup>', '**', replacedFragment);
 });
+_ = LatexCmds.superscript.prototype = new MathCommand;
+_.javascript = function() {
+  var prev = this.prev.javascript();
+  var child = this.firstChild.javascript();
+  return 'kill{' + prev + '}pow(' + prev + ',' + child + ')';
+};
 
 function Fraction(replacedFragment) {
   MathCommand.call(this, '\\frac', undefined, undefined, replacedFragment);

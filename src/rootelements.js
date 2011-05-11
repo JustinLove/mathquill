@@ -143,6 +143,15 @@ function createRoot(jQ, root, textbox, editable) {
   var anticursor, blink = cursor.blink;
 }
 
+function fixup(js) {
+  var m = js.match(/kill\{(.+)\}/);
+  if (m) {
+    return js.replace(m[1] + m[0], '')
+  } else {
+    return js
+  }
+}
+
 function RootMathBlock(){}
 _ = RootMathBlock.prototype = new MathBlock;
 _.latex = function() {
@@ -154,9 +163,9 @@ _.text = function() {
   });
 };
 _.javascript = function() {
-  return this.foldChildren('', function(js, child) {
+  return fixup(this.foldChildren('', function(js, child) {
     return js + child.javascript();
-  });
+  }));
 };
 _.renderLatex = function(latex) {
   this.jQ.children().slice(1).remove();
